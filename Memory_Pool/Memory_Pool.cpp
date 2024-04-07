@@ -1,10 +1,10 @@
 #include "Memory_Pool.h"
  
-MemoryBlock::MemoryBlock( int nUnitSize,int nUnitAmount )
+MemoryBlock::MemoryBlock(int nUnitSize, int nUnitAmount)
     :   nSize   (nUnitAmount * nUnitSize),
         nFree   (nUnitAmount - 1),  //构造的时候，就已将第一个单元分配出去了，所以减一
         nFirst  (1),                //同上
-        pNext   (NULL) {
+        pNext   (nullptr) {
     //初始化数组链表，将每个分配单元的下一个分配单元的序号写在当前单元的前两个字节中
     char* pData = aData;
     //最后一个位置不用写入
@@ -37,7 +37,7 @@ MemoryPool::MemoryPool( int _nUnitSize, int _nGrowSize /*= 1024*/, int _nInitSzi
  
 MemoryPool::~MemoryPool() {
     MemoryBlock* pMyBlock = pBlock;
-    while( pMyBlock != NULL)
+    while( pMyBlock != nullptr)
     {
         pMyBlock = pMyBlock->pNext;
         delete(pMyBlock);
@@ -45,7 +45,7 @@ MemoryPool::~MemoryPool() {
 }
  
 void* MemoryPool::Alloc() {
-    if( NULL == pBlock)
+    if(nullptr == pBlock)
     {
         //首次生成MemoryBlock,new带参数，new了一个MemoryBlock类
         pBlock = (MemoryBlock*)new(nUnitSize,nInitSize) MemoryBlock(nUnitSize,nUnitSize);
@@ -54,10 +54,10 @@ void* MemoryPool::Alloc() {
  
     //找到符合条件的内存块
     MemoryBlock* pMyBlock = pBlock;
-    while( pMyBlock != NULL && 0 == pMyBlock->nFree )
+    while( pMyBlock != nullptr && 0 == pMyBlock->nFree )
         pMyBlock = pMyBlock->pNext;
  
-    if( pMyBlock != NULL)
+    if( pMyBlock != nullptr)
     {
         //找到了，进行分配
         char* pFree = pMyBlock->aData + pMyBlock->nFirst * nUnitSize;
@@ -71,12 +71,12 @@ void* MemoryPool::Alloc() {
         //没有找到，说明原来的内存块都满了，要再次分配
  
         if( 0 == nGrowSize)
-            return NULL;
+            return nullptr;
          
         pMyBlock = (MemoryBlock*)new(nUnitSize,nGrowSize) MemoryBlock(nUnitSize,nGrowSize);
  
-        if( NULL == pMyBlock)
-            return NULL;
+        if(nullptr == pMyBlock)
+            return nullptr;
  
         //进行一次插入操作
         pMyBlock->pNext = pBlock;
@@ -89,14 +89,14 @@ void* MemoryPool::Alloc() {
 void MemoryPool::Free( void* pFree ) {
     //找到p所在的内存块
     MemoryBlock* pMyBlock = pBlock;
-    MemoryBlock* PreBlock = NULL;
-    while ( pMyBlock != NULL && ( pBlock->aData > pFree || pMyBlock->aData + pMyBlock->nSize))
+    MemoryBlock* PreBlock = nullptr;
+    while (pMyBlock != nullptr && ( pBlock->aData > pFree || pMyBlock->aData + pMyBlock->nSize))
     {
         PreBlock = pMyBlock;
         pMyBlock = pMyBlock->pNext;
     }
  
-    if( NULL != pMyBlock )      //该内存在本内存池中pMyBlock所指向的内存块中
+    if(nullptr != pMyBlock )      //该内存在本内存池中pMyBlock所指向的内存块中
     {      
         //Step1 修改数组链表
         *((USHORT*)pFree) = pMyBlock->nFirst;

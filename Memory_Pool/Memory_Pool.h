@@ -1,3 +1,4 @@
+// https://zhuanlan.zhihu.com/p/477802980
 #include <stdlib.h>
 #include <wtypes.h>
  
@@ -7,8 +8,8 @@ class MemoryBlock {
 public:
     MemoryBlock (int nUnitSize,int nUnitAmount);
     ~MemoryBlock(){};
-    static void*    operator new    (size_t,int nUnitSize,int nUnitAmount);
-    static void     operator delete (void* ,int nUnitSize,int nUnitAmount){};
+    static void*    operator new    (size_t, int nUnitSize, int nUnitAmount);
+    static void     operator delete (void*, int nUnitSize, int nUnitAmount){};
     static void     operator delete (void* pBlock);
  
     int             nSize;              //该内存块的大小，以字节为单位
@@ -24,9 +25,9 @@ class MemoryPool
 public:
                     MemoryPool (int _nUnitSize,
                                 int _nGrowSize = 1024,
-                                int _nInitSzie = 256);
-                    ~MemoryPool();
-    void*           Alloc();
+                                int _nInitSzie = 256);    // 构造函数
+                    ~MemoryPool();                        // 析构函数
+    void*           Alloc();                              // 
     void            Free(void* pFree);
  
 private:
