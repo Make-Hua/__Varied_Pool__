@@ -23,12 +23,12 @@ void MemoryBlock::operator delete( void* pBlock) {
     ::operator delete(pBlock);
 }
  
-MemoryPool::MemoryPool( int _nUnitSize, int _nGrowSize /*= 1024*/, int _nInitSzie /*= 256*/ ) {
+MemoryPool::MemoryPool( int _nUnitSize, int _nGrowSize /*= 1024*/, int _nInitSzie /*= 256*/ ) {  // 内存对齐
     nInitSize = _nInitSzie;
     nGrowSize = _nGrowSize;
     pBlock = NULL;
     if(_nUnitSize > 4)
-        nUnitSize = (_nUnitSize + (MEMPOOL_ALIGNMENT - 1)) & ~(MEMPOOL_ALIGNMENT - 1);
+        nUnitSize = (_nUnitSize + (MEMPOOL_ALIGNMENT - 1)) & ~(MEMPOOL_ALIGNMENT - 1);   // SGI _S_round_up
     else if( _nUnitSize < 2)
         nUnitSize = 2;
     else
